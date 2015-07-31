@@ -1,0 +1,23 @@
+{
+  "name": "react-native-layerkit",
+  "version": "0.1.0",
+  "description": "React Native Bridge for the Layer communication service",
+  "main": "RNLayerKit.ios.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leejms/react-native-layerkit.git"
+  },
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "layer",
+    "layerkit",
+    "message"
+  ],
+  "author": "Lee Johnson <josephleejohnson@gmail.com> (https://github.com/leejms)",
+  "license": "MIT"
+}
