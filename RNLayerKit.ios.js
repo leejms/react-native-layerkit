@@ -17,4 +17,4 @@ var RNLayerKit = {
   }
 };
 
-module.exports = RNLayerKit;
+module.exports = NativeRNLayerKit;
