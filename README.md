@@ -27,6 +27,15 @@ React Native module for commincating with Layer iOS SDK https://layer.com/
 8. Click "Build Settings" in Xcode:
 	Add the followindg to "Other Linker Flags": `$inherited`
 
+9. Rt Click on your project in XCode and select 'Add Files to...'
+
+10. Add the RNLayerKit.xcodeproj from your node_modules dir
+
+11. Go to Build Phases and add the libRNLayerKit.a to 'Link Binary With Libraries'
+
+
+If you get an error that LayerKit/LayerKit.h (the Pod) cannot be found, add this to your 'Header Search Paths' for RNLayerKit Library: `../../iOS/Pods` (point to your pod dir relative to your node_modules dir)
+
 ##react-native-layerkit methods
 _var Layer = require('react-native-layerkit');_
 ####connect(appID,callback)
