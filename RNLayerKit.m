@@ -4,6 +4,7 @@
     NSString *_appID;
     LYRClient *_layerClient;
     JSONHelper *_jsonHelper;
+    NSData *_deviceToken;
 }
 
 @synthesize bridge = _bridge;
@@ -42,6 +43,8 @@ RCT_EXPORT_METHOD(connect:(NSString*)appIDstr callback:(RCTResponseSenderBlock)c
                 callback(@[[_jsonHelper convertErrorToDictionary:error], @NO]);
             } else {
                 RCTLogInfo(@"Connected to Layer!");
+                if(_deviceToken)
+                    [self updateRemoteNotificationDeviceToken:_deviceToken];
                 callback(@[[NSNull null], @YES]);
             }
         }];
@@ -76,7 +79,7 @@ RCT_EXPORT_METHOD(sendMessageToUserIDs:(NSString*)messageText userIDs:(NSArray*)
     LYRMessagePart *messagePart = [LYRMessagePart messagePartWithMIMEType:MIMETypeTextPlain data:messageData];
     
     // Creates and returns a new message object with the given conversation and array of message parts
-    LYRMessage *message = [_layerClient newMessageWithParts:@[ messagePart ] options:nil error:&error];
+    LYRMessage *message = [_layerClient newMessageWithParts:@[ messagePart ] options:@{LYRMessageOptionsPushNotificationAlertKey: messageText,LYRMessageOptionsPushNotificationSoundNameKey: @"layerbell.caf"} error:&error];
     
     // Sends the specified message
     BOOL success = [conversation sendMessage:message error:&error];
@@ -200,17 +203,23 @@ RCT_EXPORT_METHOD(authenticateLayerWithUserID:(NSString *)userID callback:(RCTRe
 }
 -(void)updateRemoteNotificationDeviceToken:(NSData*)deviceToken
 {
-    NSError *error;
-    BOOL success = [_layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
-    if (success) {
-        NSLog(@"Application did register for remote notifications");
-        [self.bridge.eventDispatcher sendAppEventWithName:@"LayerEvent"
-                                                     body:@{@"source":@"LayerClient",@"type": @"didRegisterForRemoteNotificationsWithDeviceToken", @"data":@{@"token":deviceToken}}];
-    } else {
-        NSLog(@"Error updating Layer device token for push:%@", error);
-        [self sendErrorEvent:error];
+    // if we haven't initialize our client, then save the token for later
+    if(!_layerClient){
+        _deviceToken=deviceToken;
     }
-
+    else{
+        NSError *error;
+        BOOL success = [_layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
+        if (success) {
+            NSLog(@"Application did register for remote notifications");
+            [self.bridge.eventDispatcher sendAppEventWithName:@"LayerEvent"
+                                                         body:@{@"source":@"LayerClient",@"type": @"didRegisterForRemoteNotificationsWithDeviceToken"}];
+        } else {
+            NSLog(@"Error updating Layer device token for push:%@", error);
+            //[self sendErrorEvent:error];
+        }
+    }
+    
 }
 #pragma mark - Error Handle
 -(void)sendErrorEvent:(NSError*)error{
