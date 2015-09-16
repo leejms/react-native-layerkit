@@ -198,17 +198,17 @@ RCT_EXPORT_METHOD(authenticateLayerWithUserID:(NSString *)userID callback:(RCTRe
         [self updateRemoteNotificationDeviceToken:myToken];
     }
 }
--(BOOL)updateRemoteNotificationDeviceToken:(NSData*)deviceToken
+-(void)updateRemoteNotificationDeviceToken:(NSData*)deviceToken
 {
     NSError *error;
     BOOL success = [_layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
     if (success) {
         NSLog(@"Application did register for remote notifications");
-        return true;
+        [self.bridge.eventDispatcher sendAppEventWithName:@"LayerEvent"
+                                                     body:@{@"source":@"LayerClient",@"type": @"didRegisterForRemoteNotificationsWithDeviceToken", @"data":@{@"token":deviceToken}}];
     } else {
         NSLog(@"Error updating Layer device token for push:%@", error);
         [self sendErrorEvent:error];
-        return false;
     }
 
 }
