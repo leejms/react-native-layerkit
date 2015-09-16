@@ -194,7 +194,7 @@ RCT_EXPORT_METHOD(authenticateLayerWithUserID:(NSString *)userID callback:(RCTRe
     {
         NSLog (@"Successfully received the test notification!");
         NSDictionary *userInfo = notification.userInfo;
-        MyObject *myToken = [userInfo objectForKey:@"deviceToken"];
+        NSData *myToken = [userInfo objectForKey:@"deviceToken"];
         [self updateRemoteNotificationDeviceToken:myToken];
     }
 }
