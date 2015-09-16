@@ -178,6 +178,20 @@ RCT_EXPORT_METHOD(authenticateLayerWithUserID:(NSString *)userID callback:(RCTRe
         }
     }];
 }
+
+#pragma mark - Register for Push Notif
+-(BOOL)updateRemoteNotificationDeviceToken:(NSData*)deviceToken
+{
+    NSError *error;
+    BOOL success = [_layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
+    if (success) {
+        NSLog(@"Application did register for remote notifications");
+    } else {
+        NSLog(@"Error updating Layer device token for push:%@", error);
+        [self sendErrorEvent:error];
+    }
+
+}
 #pragma mark - Error Handle
 -(void)sendErrorEvent:(NSError*)error{
     [self.bridge.eventDispatcher sendAppEventWithName:@"LayerEvent"
