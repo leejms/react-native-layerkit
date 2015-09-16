@@ -9,5 +9,4 @@
 
 @interface RNLayerKit : NSObject <RCTBridgeModule>
 - (void)didReceiveTypingIndicator:(NSNotification *)notification;
-- (BOOL)updateRemoteNotificationDeviceToken:(NSData*)deviceToken;
 @end

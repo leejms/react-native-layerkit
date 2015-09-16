@@ -13,6 +13,10 @@
     if ((self = [super init])) {
         RCTLogInfo(@"LayerBridge init");
         _jsonHelper = [JSONHelper new];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receivedNotification:)
+                                                     name:@"RNLayerKitNotification"
+                                                   object:nil];
     }
     return self;
 }
@@ -180,6 +184,20 @@ RCT_EXPORT_METHOD(authenticateLayerWithUserID:(NSString *)userID callback:(RCTRe
 }
 
 #pragma mark - Register for Push Notif
+- (void) receivedNotification:(NSNotification *) notification
+{
+    // [notification name] should always be @"TestNotification"
+    // unless you use this method for observation of other notifications
+    // as well.
+    
+    if ([[notification name] isEqualToString:@"RNLayerKitNotification"])
+    {
+        NSLog (@"Successfully received the test notification!");
+        NSDictionary *userInfo = notification.userInfo;
+        MyObject *myToken = [userInfo objectForKey:@"deviceToken"];
+        [self updateRemoteNotificationDeviceToken:myToken];
+    }
+}
 -(BOOL)updateRemoteNotificationDeviceToken:(NSData*)deviceToken
 {
     NSError *error;
