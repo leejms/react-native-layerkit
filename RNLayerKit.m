@@ -130,6 +130,29 @@ RCT_EXPORT_METHOD(getMessages:(NSString*)convoID limit:(int)limit offset:(int)of
     }
 }
 
+RCT_EXPORT_METHOD(markAllAsRead:(NSString*)convoID callback:(RCTResponseSenderBlock)callback)
+{
+    LayerQuery *query = [LayerQuery new];
+    NSError *err;
+    LYRConversation *thisConvo = [query fetchConvoWithId:convoID client:_layerClient error:err];
+    if(err){
+        [self sendErrorEvent:err];
+    }
+    else {
+        NSError *error;
+        BOOL success = [thisConvo markAllMessagesAsRead error:&error];
+        if(success){
+            RCTLogInfo(@"Layer Messages marked as read");
+            callback(@[[NSNull null],@YES]);
+        }
+        else {
+            id retErr = RCTMakeAndLogError(@"Error marking messages as read ",error,NULL);
+            callback(@[retErr,[NSNull null]]);
+        }
+    }
+
+}
+
 RCT_EXPORT_METHOD(sendTypingBegin:(NSString*)convoID)
 {
     LayerQuery *query = [LayerQuery new];
