@@ -140,9 +140,9 @@ RCT_EXPORT_METHOD(markAllAsRead:(NSString*)convoID callback:(RCTResponseSenderBl
     }
     else {
         NSError *error;
-        BOOL success = [thisConvo markAllMessagesAsRead error:&error];
+        BOOL success = [thisConvo markAllMessagesAsRead:&error];
         if(success){
-            RCTLogInfo(@"Layer Messages marked as read");
+            //RCTLogInfo(@"Layer Messages marked as read");
             callback(@[[NSNull null],@YES]);
         }
         else {
@@ -150,7 +150,7 @@ RCT_EXPORT_METHOD(markAllAsRead:(NSString*)convoID callback:(RCTResponseSenderBl
             callback(@[retErr,[NSNull null]]);
         }
     }
-
+    
 }
 
 RCT_EXPORT_METHOD(sendTypingBegin:(NSString*)convoID)
