@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var NativeRNLayerKit = require('NativeModules').RNLayerKit;
+var NativeRNLayerKit = require('react-native').NativeModules;
 var invariant = require('invariant');
 
 /**
