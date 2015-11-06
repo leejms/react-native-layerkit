@@ -5,7 +5,7 @@
 'use strict';
 
 var NativeRNLayerKit = require('react-native').NativeModules;
-//var invariant = require('invariant');
+var invariant = require('invariant');
 
 /**
  * High-level docs for the RNLayerKit iOS API can be written here.
